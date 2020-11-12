@@ -1,0 +1,149 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Double DQN SinglePlayer",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/01_double_dqn/train_singleplayer.py",
+            "args": [
+                "--cuda",
+                "--double",
+                "--scenario", "side2_pass_3units",
+                "--units", "3",
+                "--maxFrames", "300000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Double DQN Multiplayer",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/01_double_dqn/train_multiplayer.py",
+            "args": [
+                "--cuda",
+                "--double",
+                "--scenario", "multi_side_ai_3units",
+                "--units", "3",
+                "--maxFrames", "300000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Double DQN Selfplayer",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/01_double_dqn/train_selfplayer.py",
+            "args": [
+                "--cuda",
+                "--double",
+                "--scenario", "multi_side_ai_3units",
+                "--units", "3",
+                "--maxFrames", "300000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Rainbow DQN Singleplayer",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/02_rainbow_dqn/train_singleplayer.py",
+            "args": [
+                "--cuda",
+                "--scenario", "side2_pass_3units",
+                "--units", "3",
+                "--maxFrames", "500000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Rainbow DQN Multiplayer",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/02_rainbow_dqn/train_multiplayer.py",
+            "args": [
+                "--cuda",
+                "--scenario", "multi_side_ai_3units",
+                "--units", "3",
+                "--maxFrames", "500000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Rainbow DQN Multiplayer 4 Units",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/02_rainbow_dqn/train_multiplayer.py",
+            "args": [
+                "--cuda",
+                "--scenario", "multi_side_ai_4units",
+                "--units", "4",
+                "--maxFrames", "500000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Rainbow DQN Selfplay",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/02_rainbow_dqn/train_selfplayer.py",
+            "args": [
+                "--cuda",
+                "--scenario", "multi_side_ai_3units",
+                "--units", "3",
+                "--maxFrames", "500000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Play Rainbow DQN Singleplayer",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/02_rainbow_dqn/play_singleplayer.py",
+            "args": [
+                "--scenario", "side2_pass_3units",
+                "--cuda",
+                "--units", "3",
+                "--model1=./02_rainbow_dqn/runs/Sep27_06-24-13-bfw-rainbow-scenario=side2_pass_3units-units=3-player0.dat",
+                "--maxFrames", "50000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Play Rainbow DQN Multiplayer",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/02_rainbow_dqn/play_multiplayer.py",
+            "args": [
+                "--scenario", "multi_side_ai_3units",
+                "--cuda",
+                "--units", "3",
+                "--model1=./02_rainbow_dqn/runs/Sep27_06-24-13-bfw-rainbow-scenario=side2_pass_3units-units=3-player0.dat",
+                // "--model2=./02_rainbow_dqn/runs/Sep27_06-24-13-bfw-rainbow-scenario=side2_pass_3units-units=3-player0.dat",
+                // "--model1=./02_rainbow_dqn/runs/Sep21_16-47-06-bfw-rainbow-scenario=multi_side_ai_3units-units=3-player1.dat",
+                "--model2=./02_rainbow_dqn/runs/Sep21_16-47-06-bfw-rainbow-scenario=multi_side_ai_3units-units=3-player1.dat",
+                "--maxFrames", "50000"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+    ]
+}

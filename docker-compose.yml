@@ -1,0 +1,301 @@
+version: '2.3'
+
+services:
+
+  ### Double DQN trainings
+
+  # container for singleplayer training with double DQN
+  bfw-double-singleplayer:
+    image: masterthesis-bfw-0920
+    container_name: bfw-double-singleplayer
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=0
+    volumes:
+      - ${ROOT_PATH}/results/double-singleplayer/runs:/app/runs
+      - ${ROOT_PATH}/results/double-singleplayer/nets:/app/nets
+      - ${ROOT_PATH}/results/double-singleplayer/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/01_double_dqn/train_singleplayer.py --double --cuda --scenario side2_pass_3units --units 3 --maxFrames 500000"
+
+  # container for multiplayer training with double DQN
+  bfw-double-multiplayer:
+    image: masterthesis-bfw-0920
+    container_name: bfw-double-multiplayer
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=0
+    volumes:
+      - ${ROOT_PATH}/results/double-multiplayer/runs:/app/runs
+      - ${ROOT_PATH}/results/double-multiplayer/nets:/app/nets
+      - ${ROOT_PATH}/results/double-multiplayer/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/01_double_dqn/train_multiplayer.py --double --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000"
+
+  # container for selfplayer training with double DQN
+  bfw-double-selfplay:
+    image: masterthesis-bfw-0920
+    container_name: bfw-double-selfplay
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=0
+    volumes:
+      - ${ROOT_PATH}/results/double-selfplay/runs:/app/runs
+      - ${ROOT_PATH}/results/double-selfplay/nets:/app/nets
+      - ${ROOT_PATH}/results/double-selfplay/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/01_double_dqn/train_selfplayer.py --double --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000"
+
+  # container for selfplayer training with double DQN
+  bfw-double-atk-def:
+    image: masterthesis-bfw-1009-def
+    container_name: bfw-double-atk-def
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=1
+    volumes:
+      - ${ROOT_PATH}/results/double-atk-def/runs:/app/runs
+      - ${ROOT_PATH}/results/double-atk-def/nets:/app/nets
+      - ${ROOT_PATH}/results/double-atk-def/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/01_double_dqn/train_multiplayer.py --cuda --scenario multi_side_ai_3units_def --units 3 --maxFrames 500000"
+
+  # container for multiplayer training in attack and defender role with double DQN (on special asymmetric map)
+  bfw-double-atk-def-castle:
+    image: masterthesis-bfw-1009-def
+    container_name: bfw-double-atk-def-castle
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=1
+    volumes:
+      - ${ROOT_PATH}/results/double-atk-def-castle/runs:/app/runs
+      - ${ROOT_PATH}/results/double-atk-def-castle/nets:/app/nets
+      - ${ROOT_PATH}/results/double-atk-def-castle/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/01_double_dqn/train_multiplayer.py --cuda --scenario multi_side_ai_3units_castle --units 3 --maxFrames 500000"
+
+  # container for multiplayer training with double DQN with prototypical map rotation over five maps every game
+  # bfw-double-multiplayer-map-rotation:
+  #   image: masterthesis-bfw-0908
+  #   container_name: bfw-double-multiplayer-map-rotation
+  #   runtime: nvidia
+  #   environment: 
+  #     - NVIDIA_VISIBLE_DEVICES=0
+  #   volumes:
+  #     - ${ROOT_PATH}/results/double-multiplayer-map-rotation/runs:/app/runs
+  #     - ${ROOT_PATH}/results/double-multiplayer-map-rotation/nets:/app/nets
+  #     - ${ROOT_PATH}/results/double-multiplayer-map-rotation/maps:/app/maps
+  #   command: >
+  #     sh -c "export DISPLAY=:99.0 &&
+  #             /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+  #             python3 /app/0_double_dqn/train_multiplayer.py --double --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000 --variations 1 --rotation 5"
+
+  # container for multiplayer training with double DQN with prototypical map rotation over five maps every ten games
+  # bfw-double-multiplayer-map-rotation-less:
+  #   image: masterthesis-bfw-0908
+  #   container_name: bfw-double-multiplayer-map-rotation-less
+  #   runtime: nvidia
+  #   environment: 
+  #     - NVIDIA_VISIBLE_DEVICES=0
+  #   volumes:
+  #     - ${ROOT_PATH}/results/double-multiplayer-map-rotation-less/runs:/app/runs
+  #     - ${ROOT_PATH}/results/double-multiplayer-map-rotation-less/nets:/app/nets
+  #     - ${ROOT_PATH}/results/double-multiplayer-map-rotation-less/maps:/app/maps
+  #   command: >
+  #     sh -c "export DISPLAY=:99.0 &&
+  #             /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+  #             python3 /app/01_double_dqn/train_multiplayer.py --double --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000 --variations 10 --rotation 5"
+
+
+
+  ### Rainbow DQN trainings
+
+  # container for singleplayer training with rainbow DQN
+  bfw-rainbow-singleplayer:
+    image: masterthesis-bfw-0920
+    container_name: bfw-rainbow-singleplayer
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-singleplayer/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-singleplayer/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-singleplayer/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/train_singleplayer.py --cuda --scenario side2_pass_3units --units 3 --maxFrames 500000"
+
+  # container for multiplayer training with rainbow DQN
+  bfw-rainbow-multiplayer:
+    image: masterthesis-bfw-0920
+    container_name: bfw-rainbow-multiplayer
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-multiplayer/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-multiplayer/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-multiplayer/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/2_rainbow_dqn/train_multiplayer.py --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000"
+
+  # container for selfplayer training with rainbow DQN
+  bfw-rainbow-selfplay:
+    image: masterthesis-bfw-0920
+    container_name: bfw-rainbow-selfplay
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-selfplay/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-selfplay/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-selfplay/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/train_selfplayer.py --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000"
+
+  # container for selfplayer training with rainbow DQN
+  bfw-rainbow-atk-def:
+    image: masterthesis-bfw-1009-def
+    container_name: bfw-rainbow-atk-def
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=3
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-atk-def/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-atk-def/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-atk-def/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/train_multiplayer.py --cuda --scenario multi_side_ai_3units_def --units 3 --maxFrames 500000"
+
+  # container for multiplayer training in attack and defender role with rainbow DQN (on special asymmetric map)
+  bfw-rainbow-atk-def-castle:
+    image: masterthesis-bfw-1009-def
+    container_name: bfw-rainbow-atk-def-castle
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=3
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-atk-def-castle/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-atk-def-castle/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-atk-def-castle/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/train_multiplayer.py --cuda --scenario multi_side_ai_3units_castle --units 3 --maxFrames 500000"
+              
+  # container for multiplayer training with rainbow DQN with prototypical map rotation over five maps every game
+  # bfw-rainbow-multiplayer-map-rotation:
+  #   image: masterthesis-bfw-0908
+  #   container_name: bfw-rainbow-multiplayer-map-rotation
+  #   runtime: nvidia
+  #   environment: 
+  #     - NVIDIA_VISIBLE_DEVICES=2
+  #   volumes:
+  #     - ${ROOT_PATH}/results/rainbow-multiplayer-map-rotation/runs:/app/runs
+  #     - ${ROOT_PATH}/results/rainbow-multiplayer-map-rotation/nets:/app/nets
+  #     - ${ROOT_PATH}/results/rainbow-multiplayer-map-rotation/maps:/app/maps
+  #   command: >
+  #     sh -c "export DISPLAY=:99.0 &&
+  #             /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+  #             python3 /app/02_rainbow_dqn/train_multiplayer.py --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000 --variations 1 --rotation 5"
+
+  # container for multiplayer training with rainbow DQN with prototypical map rotation over five maps every ten games
+  # bfw-rainbow-multiplayer-map-rotation-less:
+  #   image: masterthesis-bfw-0908
+  #   container_name: bfw-rainbow-multiplayer-map-rotation-less
+  #   runtime: nvidia
+  #   environment: 
+  #     - NVIDIA_VISIBLE_DEVICES=2
+  #   volumes:
+  #     - ${ROOT_PATH}/results/rainbow-multiplayer-map-rotation-less/runs:/app/runs
+  #     - ${ROOT_PATH}/results/rainbow-multiplayer-map-rotation-less/nets:/app/nets
+  #     - ${ROOT_PATH}/results/rainbow-multiplayer-map-rotation-less/maps:/app/maps
+  #   command: >
+  #     sh -c "export DISPLAY=:99.0 &&
+  #             /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+  #             python3 /app/02_rainbow_dqn/train_multiplayer.py --cuda --scenario multi_side_ai_3units --units 3 --maxFrames 500000 --variations 10 --rotation 5"
+
+
+
+  ### Rainbow DQN tests
+
+  # container for singleplayer testing with rainbow DQN
+  bfw-rainbow-singleplayer-test:
+    image: masterthesis-bfw-1009
+    container_name: bfw-rainbow-singleplayer-test
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-singleplayer-test/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-singleplayer-test/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-singleplayer-test/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/play_singleplayer.py --cuda --scenario side2_pass_3units --units 3 --model1=./02_rainbow_dqn/runs/Sep27_06-24-13-bfw-rainbow-scenario=side2_pass_3units-units=3-player0.dat --maxFrames 50000"
+
+  # container for singleplayer vs singleplayer testing with rainbow DQN
+  bfw-rainbow-multi-singleplayer-test:
+    image: masterthesis-bfw-1009
+    container_name: bfw-rainbow-multi-singleplayer-test
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-multi-singleplayer-test/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-multi-singleplayer-test/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-multi-singleplayer-test/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/play_multiplayer.py --cuda --scenario multi_side_ai_3units --units 3 --model1=./02_rainbow_dqn/runs/Sep27_06-24-13-bfw-rainbow-scenario=side2_pass_3units-units=3-player0.dat --model2=./02_rainbow_dqn/runs/Sep27_06-24-13-bfw-rainbow-scenario=side2_pass_3units-units=3-player0.dat --maxFrames 50000"
+
+  # container for multiplayer vs multiplayer testing with rainbow DQN
+  bfw-rainbow-multi-multiplayer-test:
+    image: masterthesis-bfw-1009
+    container_name: bfw-rainbow-multi-multiplayer-test
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-multi-multiplayer-test/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-multi-multiplayer-test/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-multi-multiplayer-test/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/play_multiplayer.py --cuda --scenario multi_side_ai_3units --units 3 --model1=./02_rainbow_dqn/runs/Sep21_16-47-06-bfw-rainbow-scenario=multi_side_ai_3units-units=3-player1.dat --model2=./02_rainbow_dqn/runs/Sep21_16-47-06-bfw-rainbow-scenario=multi_side_ai_3units-units=3-player1.dat --maxFrames 50000"
+
+  # container for singleplayer vs multiplayer testing with rainbow DQN
+  bfw-rainbow-singleplayer-multiplayer-test:
+    image: masterthesis-bfw-1009
+    container_name: bfw-rainbow-multi-singleplayer-multiplayer-test
+    runtime: nvidia
+    environment: 
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - ${ROOT_PATH}/results/rainbow-multi-singleplayer-multiplayer-test/runs:/app/runs
+      - ${ROOT_PATH}/results/rainbow-multi-singleplayer-multiplayer-test/nets:/app/nets
+      - ${ROOT_PATH}/results/rainbow-multi-singleplayer-multiplayer-test/maps:/app/maps
+    command: >
+      sh -c "export DISPLAY=:99.0 &&
+              /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1024x768x24 &&
+              python3 /app/02_rainbow_dqn/play_multiplayer.py --cuda --scenario multi_side_ai_3units --units 3 --model1=./02_rainbow_dqn/runs/Sep27_06-24-13-bfw-rainbow-scenario=side2_pass_3units-units=3-player0.dat --model2=./02_rainbow_dqn/runs/Sep21_16-47-06-bfw-rainbow-scenario=multi_side_ai_3units-units=3-player1.dat --maxFrames 50000"

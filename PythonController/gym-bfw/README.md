@@ -1,0 +1,1 @@
+OpenAI Gym implementation for Battle for Wesnoth
